@@ -7,8 +7,8 @@ Due Date: 11/5 at midnight
 
 Implement the matrix multiply (matmul) A * B = C algorithm in four variations:
 
-1. CPU Matrix Multiply
-2. GPU Matrix Multiply
+1. CPU Matrix Multiply -done
+2. GPU Matrix Multiply 
 3. GPU Tiled Matirx Multiply
 4. GPU cuBLAS Library Call
 
