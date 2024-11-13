@@ -15,6 +15,14 @@ void MatrixMulOnHost(float* M, float* N, float* P, int Width) {
  }
 }
 }
+double get_clock() {
+    struct timeval tv; int ok;
+    ok = gettimeofday(&tv, (void *) 0);
+    if (ok<0) { 
+        printf("gettimeofday error"); 
+        }
+    return (tv.tv_sec * 1.0 + tv.tv_usec * 1.0E-6);
+}
 
 int main() {
   int size = 256;
@@ -22,6 +30,8 @@ int main() {
   float* x = malloc(sizeof(float) * size * size);
   float* y = malloc(sizeof(float) * size * size);
   float* z = malloc(sizeof(float) * size * size);
+  
+  double start = get_clock();
 
   for (int i = 0; i < size; i++) {
     for (int j = 0; j < size; j++) {
@@ -39,6 +49,10 @@ int main() {
       }
     }
   }
+
+  double end = get_clock();
+  printf("time per call: %f ns\n", (end-start) );
+
 
   for (int i = 0; i < 10; i++) { // Just print the first 10x10 block
   for (int j = 0; j < 10; j++) {
