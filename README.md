@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/j7EgYxTu)
 # A4. Matrix Multiply
 
 Due Date: 11/5 at midnight
@@ -6,8 +7,8 @@ Due Date: 11/5 at midnight
 
 Implement the matrix multiply (matmul) A * B = C algorithm in four variations:
 
-1. CPU Matrix Multiply
-2. GPU Matrix Multiply
+1. CPU Matrix Multiply -done
+2. GPU Matrix Multiply 
 3. GPU Tiled Matirx Multiply
 4. GPU cuBLAS Library Call
 
