@@ -11,7 +11,7 @@
 
 //resources :  that cublas github you linked micheal
 
-#define SIZE 128
+#define SIZE 32
 
 double get_clock() {
     struct timeval tv; int ok;
@@ -36,7 +36,7 @@ int main(void) {
   const float beta = 0.0f;
 
 
-  int size =12;
+  int size =1024;
   
 
   float *M, *N, *P;
@@ -76,8 +76,8 @@ int main(void) {
   // check results
 
 
-  for (int i = 0; i < size; i++) {
-      for (int j = 0; j < size; j++) {
+  for (int i = 0; i < 10; i++) {
+      for (int j = 0; j < 10; j++) {
         printf("%f ", P[i * size + j]);
         if (P[i * size + j] != size) {
           printf("Error at P[%d][%d]: %f\n", i, j, P[i * size + j]);

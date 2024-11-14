@@ -7,28 +7,24 @@
 #include <sys/time.h>
 
 // define constants
-#define BLOCK_SIZE 128
+#define BLOCK_SIZE 32
 
 __global__ void matrix_mul(float* M, float* N, float* P, int Width) { //need kernel  function
-    int gindex = threadIdx.x + blockIdx.x * blockDim.x;
+    // Get the row and column index for the output matrix element that this thread computes
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if(gindex >= Width){
-        return;
-    }
-    {
-    for (int i = 0; i < Width; ++i)
-    for (int j = 0; j < Width; ++j) {
-    float sum = 0;
-    for (int k = 0; k < Width; ++k) {
-    float a = M[i * Width + k];
-    float b = N[k * Width + j];
-    sum += a * b;
- }
-    P[i * Width + j] = sum;
- }
-    }
+    if (row < Width && col < Width) {
+        float sum = 0.0f;
 
-    __syncthreads();
+        for (int k = 0; k < Width; ++k) {
+            sum += M[row * Width + k] * N[k * Width + col];
+        }
+
+        // Store the result in the output matrix P
+        P[row * Width + col] = sum;
+    }
+   __syncthreads();
 }
 
 
@@ -43,18 +39,17 @@ double get_clock() {
 
 int main(void) {
   // allocate input and output arrays
-  int SIZE = 1<<20; // 1M elements
-  SIZE =128;
+  int SIZE =10000;
 
   float *M, *N, *P;
-  cudaMallocManaged(&M, SIZE*sizeof(float));
-  cudaMallocManaged(&N, SIZE*sizeof(float));
-  cudaMallocManaged(&P, SIZE*sizeof(float));
+  cudaMallocManaged(&M, SIZE*SIZE * sizeof(float));
+  cudaMallocManaged(&N, SIZE*SIZE * sizeof(float));
+  cudaMallocManaged(&P, SIZE*SIZE * sizeof(float));
 
   for (int i = 0; i < SIZE; i++) {
     for (int j = 0; j < SIZE; j++) {
-      M[i * SIZE + j] = 1; // x[i][j]
-      N[i * SIZE + j] = 1;
+      M[i * SIZE + j] = 1.0f; // x[i][j]
+      N[i * SIZE + j] = 1.0f;
     }
   }
 
@@ -64,8 +59,9 @@ int main(void) {
 
       // run the kernel
   //Initializing block size and running kernerl
-  int blocksPerGrid = (SIZE + BLOCK_SIZE - 1) / BLOCK_SIZE; 
-  int threadsPerBlock = BLOCK_SIZE;
+  dim3 threadsPerBlock(BLOCK_SIZE, BLOCK_SIZE); // Threads per block (BLOCK_SIZE x BLOCK_SIZE)
+  dim3 blocksPerGrid((SIZE + BLOCK_SIZE - 1) / BLOCK_SIZE, (SIZE + BLOCK_SIZE - 1) / BLOCK_SIZE); // Grid size
+
 
 
   matrix_mul<<<blocksPerGrid, threadsPerBlock>>>(M,N,P, SIZE);

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/time.h>
 
 void MatrixMulOnHost(float* M, float* N, float* P, int Width) {
     {
@@ -25,7 +26,7 @@ double get_clock() {
 }
 
 int main() {
-  int size = 256;
+  int size = 1024;
 
   float* x = malloc(sizeof(float) * size * size);
   float* y = malloc(sizeof(float) * size * size);
